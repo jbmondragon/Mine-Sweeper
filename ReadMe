@@ -1,0 +1,13 @@
+This Mine Sweeper Game is made by Jake B. Mondragon
+
+The Main.java is the main class
+The MainFrame,java contains the execution of the logic of the Game
+The Opening.java contains the opening panel
+The Instruction.java contains the instruction of the game
+The Level.java contains the level of the game
+The User.java ask the name of the user
+The Hash.java is the Hash Map class
+The IntArrayQueue is the Queue class
+The MineList is the Singly linked list implementation
+
+git remote add origin https://github.com/mondragonjake/Mine-Sweeper.git
