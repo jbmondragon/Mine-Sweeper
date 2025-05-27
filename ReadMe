@@ -1,17 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Mine Sweeper Game</title>
-</head>
-<body>
-  <h1>Mine Sweeper Game</h1>
-  <h2>Developed by Jake Benusa Mondragon</h2>
+# Mine Sweeper Game
+## Developed by Jake Benusa Mondragon
 
-  <p>
-    <strong>Mine Sweeper</strong> is a classic logic puzzle game. It features a grid of clickable tiles, with hidden 
-    <em>mines</em> randomly placed throughout the board. The objective is to clear the entire board without 
-    <em>detonating</em> any mines. Clues are provided by numbers indicating how many neighboring tiles contain mines.
-  </p>
-</body>
-</html>
+**Mine Sweeper** is a classic logic puzzle game. It features a grid of clickable tiles, with hidden *mines* randomly placed throughout the board.
+
+The objective is to clear the entire board without *detonating* any mines. Clues are provided by numbers indicating how many neighboring tiles contain mines.
+
+---
+
+### Git Remote Setup
+
+To link your local repository to GitHub, use the following command:
+
+```bash
+git remote add origin https://github.com/mondragonjake/Mine-Sweeper.git
