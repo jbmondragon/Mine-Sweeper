@@ -1,26 +1,25 @@
-#  Mine Sweeper Game
+# 🧨 Mine Sweeper Game
 
 _Developed by Jake Benusa Mondragon_
 
-![Game Screenshot](/src/resources/MineSweeper-SS.png)
+---
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+## 📦 Dependencies
+
+- **Java 21 or higher**
 
 ---
 
-## Table of Contents
+## 📑 Table of Contents
 
 - [About](#about)
 - [Features](#features)
 - [How to Play](#how-to-play)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
-## About
+## 📖 About
 
 **Mine Sweeper** is a classic logic puzzle game. It features a grid of clickable tiles, with hidden _mines_ randomly placed throughout the board.
 
@@ -28,7 +27,7 @@ The objective is to clear the entire board without _detonating_ any mines. Clues
 
 ---
 
-## Features
+## ✨ Features
 
 - Customizable grid sizes
 - Multiple difficulty levels
@@ -37,7 +36,7 @@ The objective is to clear the entire board without _detonating_ any mines. Clues
 
 ---
 
-## How to Play
+## 🎮 How to Play
 
 1. Click tiles to reveal them.
 2. Numbers indicate how many mines are adjacent.
@@ -46,10 +45,54 @@ The objective is to clear the entire board without _detonating_ any mines. Clues
 
 ---
 
-## Installation
+## 🚀 Installation & Setup Guide
 
-```sh
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/mondragonjake/Mine-Sweeper.git
 cd Mine-Sweeper
-# Instructions for building/running the Java app
-```
+
+2. Open the Project in VS Code
+Ensure you have the Java Extension Pack installed in VS Code.
+
+Open the src folder using VS Code.
+
+Navigate to Main.java inside the src directory.
+
+3. Run the Application
+Open Main.java in VS Code.
+
+Run it using:
+
+The Run Java button in the top right corner of VS Code, or
+
+Press the F6 key (default keybind for Run Java).
+
+4. Build a JAR File (Optional)
+If you want to build a .jar file:
+
+Press Ctrl + Shift + P to open the Command Palette.
+
+Search for and select Java: Export Jar.
+
+Choose Main as the main class.
+
+Select all necessary files when prompted.
+
+Confirm by clicking OK.
+
+This will generate a Mine-Sweeper.jar file in your project directory.
+
+5. Run the JAR File
+You can run the JAR in one of the following ways:
+
+Option A: Command Line
+bash
+Copy
+Edit
+java -jar Mine-Sweeper.jar
+Option B: Double-click (GUI)
+Double-click the Mine-Sweeper.jar file (Java Runtime Environment must be installed).
+
+⚠️ Important: Use Java 21 or later. The application will not run on earlier versions.
