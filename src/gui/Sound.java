@@ -1,48 +1,47 @@
-import java.io.File;
 import java.io.IOException;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import java.net.URL;
+import javax.sound.sampled.*;
 
 public class Sound {
-    Clip clip;
+
+    private Clip clip;  // Define clip at the class level
 
     public void playIntroSound() {
-        try {
-            File soundFile = new File("C:\\Users\\Geralyn\\Desktop\\MineSweeper\\src\\resources\\intro.wav");
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-            clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
+        playSound("/resources/intro.wav");
     }
 
     public void playClickSound() {
-        try {
-            File soundFile = new File("C:\\Users\\Geralyn\\Desktop\\MineSweeper\\src\\resources\\click.wav");
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-            clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
+        playSound("/resources/click.wav");
     }
 
     public void playBogshSound() {
+        playSound("/resources/bomb.wav");
+    }
+
+    private void playSound(String resourcePath) {
         try {
-            File soundFile = new File("C:\\Users\\Geralyn\\Desktop\\MineSweeper\\src\\resources\\bomb.wav");
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-            clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
+            URL soundURL = getClass().getResource(resourcePath);
+            if (soundURL == null) {
+                System.err.println("Sound file not found: " + resourcePath);
+                return;
+            }
+
+            try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL)) {
+                if (clip != null && clip.isRunning()) {
+                    clip.stop();  // Stop any currently playing clip
+                }
+                clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                clip.start();
+            }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
 
+    public void stopSound() {
+        if (clip != null && clip.isRunning()) {
+            clip.stop();
+        }
+    }
 }

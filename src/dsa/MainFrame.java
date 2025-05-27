@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.URL;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -63,46 +64,66 @@ public class MainFrame extends JFrame implements MouseListener {
     Sound sound = new Sound();
 
     public MainFrame() {
+        setupFrame();
+        setLogo();
+        initializeComponents();
+        registerListeners();
+        setupPanels();
+        showOpeningPanel();
+    }
+
+    private void setupFrame() {
         this.setTitle("Board yarn");
         this.setSize(1000, 800);
         this.setBackground(Color.decode("#3CB371"));
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
 
-        // creating objects from classes and adding listeners to the buttons
+    private void initializeComponents() {
         cardLayout = new CardLayout();
         main = new JPanel(cardLayout);
-
         sound.playIntroSound();
 
         open.createOpening();
-        open.nextButtonOpening.addMouseListener(this);
-
         user.askUserDetails();
+        instruction.createInstruction();
+        menu.createMenu();
+        level.createLevel();
+
+        gameover = new GameOver();
+        gameover.createGameOver();
+
+        win = new Win();
+        win.createWin();
+    }
+
+    private void setLogo(){
+        Image icon = Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("/resources/logo.png"));
+        setIconImage(icon);
+    }
+
+    private void registerListeners() {
+        open.nextButtonOpening.addMouseListener(this);
         user.okbtn.addMouseListener(this);
 
-        instruction.createInstruction();
         instruction.playbtn.addMouseListener(this);
 
-        menu.createMenu();
         menu.newGamebtn.addMouseListener(this);
         menu.homebtn.addMouseListener(this);
         menu.resumebtn.addMouseListener(this);
         menu.exitbtn.addMouseListener(this);
 
-        level.createLevel();
         level.easybtn.addMouseListener(this);
         level.mediumbtn.addMouseListener(this);
         level.hardbtn.addMouseListener(this);
 
-        // panels for winning and losing the game
-        gameover = new GameOver();
-        gameover.createGameOver();
         gameover.backtogame.addMouseListener(this);
-
-        win = new Win();
-        win.createWin();
         win.backtogame.addMouseListener(this);
+    }
 
-        // card layout to change panels
+    private void setupPanels() {
         main.add(open.openingPanel, "1");
         main.add(user.userPanel, "2");
         main.add(instruction.instructionPanel, "3");
@@ -111,13 +132,12 @@ public class MainFrame extends JFrame implements MouseListener {
         main.add(menu.menuPanel, "6");
         main.add(gameover.gameOverPanel, "7");
         main.add(win.winPanel, "8");
+
         this.add(main);
+    }
 
+    private void showOpeningPanel() {
         cardLayout.show(main, "1");
-
-        this.setLocationRelativeTo(null);
-        this.setResizable(false);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
@@ -135,12 +155,9 @@ public class MainFrame extends JFrame implements MouseListener {
         }
     }
 
-    // GUI lang to for Panel for the Game
     public void createMainPanel() {
-
         upperPanel.setBackground(new Color(0x5a8d03));
         lowerPanel.setBackground(new Color(0x5a8d03));
-
         mainPanel.setBorder(BorderFactory.createMatteBorder(20, 20, 20, 20, Color.DARK_GRAY));
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -160,7 +177,6 @@ public class MainFrame extends JFrame implements MouseListener {
         mainPanel.add(lowerPanel, gbc);
     }
 
-    // Code Implementation for the creation of Board Using 2D array
     public void createBoard() {
         lowerPanel.setLayout(new GridLayout(16, 16));
         for (int i = 0; i < 16; i++) {
@@ -170,12 +186,6 @@ public class MainFrame extends JFrame implements MouseListener {
         }
     }
 
-    /*
-     * This is the 2D array implementation, where in we are
-     * initializing all the buttons or the square that we
-     * will be clicking to reveal either number,
-     * empty cell or mines
-     */
     public void createButton() {
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
@@ -185,12 +195,11 @@ public class MainFrame extends JFrame implements MouseListener {
                 square[i][j].addActionListener(e -> onButtonClick(r, c));
                 square[i][j].setActionCommand(r + "," + c);
                 square[i][j].addMouseListener(this);
-                square[i][j].setBackground(Color.DARK_GRAY); // Reset background color
+                square[i][j].setBackground(Color.DARK_GRAY);
             }
         }
     }
 
-    // Condition to para malaman if na click si question mark or flag
     private void onButtonClick(int row, int col) {
         if (gameOver) {
             return;
@@ -208,65 +217,54 @@ public class MainFrame extends JFrame implements MouseListener {
     }
 
     private void toggleFlag(int row, int col) {
-
-        // Cell is flagged, so remove the flag
         if (mapFlag.getValue(row, col)) {
             square[row][col].setIcon(null);
             mapFlag.removeValue(row, col);
-        }
-        // Cell is unflagged, so add the flag
-        else {
+        } else {
             if (flagIcon == null) {
-                flagIcon = new ImageIcon("C:\\Users\\Geralyn\\Desktop\\MineSweeper\\src\\resources\\flag.jpg");
-            }
-            square[row][col].setIcon(flagIcon);
-            mapFlag.setValue(row, col, true);
+            flagIcon = new ImageIcon(getClass().getResource("/resources/flag.jpg"));
+        }
+        square[row][col].setIcon(flagIcon);
+        mapFlag.setValue(row, col, true);
         }
 
-        // for estitik lang to
-        backgroundSpaceFlag = new MatteBorder(5, 5, 5, 5, Color.BLUE);
-        Border innerPadding = ((CompoundBorder) imagelbl1.getBorder()).getInsideBorder();
-        CompoundBorder combinedBorder = new CompoundBorder(backgroundSpaceFlag, innerPadding);
-        imagelbl1.setBorder(combinedBorder);
-        imagelbl1.repaint();
+        updateLabelBorder(imagelbl1, Color.BLUE);
     }
 
     private void toggleQuestionMark(int row, int col) {
-        // Here we are using hash map to track the location of the question mark
-        // Cell has question mark, so remove it
         if (mapQues.getValue(row, col)) {
             square[row][col].setIcon(null);
             mapQues.removeValue(row, col);
-        }
-
-        // Cell does not have question mark, so add one
-        else {
-            if (question_markIcon == null) {
-                question_markIcon = new ImageIcon("C:\\Users\\Geralyn\\Desktop\\MineSweeper\\src\\resources\\question_mark.jfif");
-            }
+        } else {
+            question_markIcon = new ImageIcon(getClass().getResource("/resources/question_mark.jfif"));
             square[row][col].setIcon(question_markIcon);
             mapQues.setValue(row, col, true);
         }
-
-        // for estitik lang to
-        backgroundSpaceQuestionMark = new MatteBorder(5, 5, 5, 5, Color.BLUE); // Change to red when
-        Border innerPadding = ((CompoundBorder) imagelbl2.getBorder()).getInsideBorder();
-        CompoundBorder combinedBorder = new CompoundBorder(backgroundSpaceQuestionMark, innerPadding);
-        imagelbl2.setBorder(combinedBorder);
-        imagelbl2.repaint();
+    updateLabelBorder(imagelbl2, Color.BLUE);
     }
 
-    private void revealCellContent(int row, int col) {
+    private void updateLabelBorder(JLabel label, Color borderColor) {
+        Border currentBorder = label.getBorder();
+        Border innerPadding = (currentBorder instanceof CompoundBorder)
+            ? ((CompoundBorder) currentBorder).getInsideBorder()
+            : BorderFactory.createEmptyBorder();
 
-        // to stop the content from revealing once it is marked
+        MatteBorder outerBorder = new MatteBorder(5, 5, 5, 5, borderColor);
+        CompoundBorder combinedBorder = new CompoundBorder(outerBorder, innerPadding);
+
+        label.setBorder(combinedBorder);
+        label.repaint();
+    }
+
+
+    private void revealCellContent(int row, int col) {
         if (mapFlag.getValue(row, col) || mapQues.getValue(row, col)) {
             return;
         }
 
-        // this demostrates how will the content of the cell will be revealed
         if (mines.containMines(row, col)) {
             if (mines.bombIcon == null) {
-                mines.bombIcon = new ImageIcon("C:\\Users\\Geralyn\\Desktop\\MineSweeper\\src\\resources\\Bomb.jfif");
+                mines.bombIcon = new ImageIcon(getClass().getResource("/resources/Bomb.jfif"));
             }
             square[row][col].setIcon(mines.bombIcon);
             square[row][col].setBackground(Color.red);
@@ -290,12 +288,6 @@ public class MainFrame extends JFrame implements MouseListener {
     }
 
     private void revealAllMines() {
-        /*
-         * The function of this code is to reveal all mines
-         * Here we are using 2D arrays to access all of the unclicked cells
-         * On the other hand we are using singly linked list to reveal all the mines
-         */
-
         for (int row = 0; row < 16; row++) {
             for (int col = 0; col < 16; col++) {
                 if (mines.containMines(row, col)) {
@@ -307,7 +299,6 @@ public class MainFrame extends JFrame implements MouseListener {
     }
 
     private void disableAllButtons() {
-        // We are using 2D array here to disable all the cell once the game is over
         for (int row = 0; row < 16; row++) {
             for (int col = 0; col < 16; col++) {
                 square[row][col].setEnabled(false);
@@ -324,58 +315,55 @@ public class MainFrame extends JFrame implements MouseListener {
             int currentRow = cell[0];
             int currentCol = cell[1];
 
-            // Skip if cell is already disabled
-            if (!square[currentRow][currentCol].isEnabled()) {
+            if (isCellRevealedOrMarked(currentRow, currentCol)) {
                 continue;
             }
 
-            // Get the icon of the current cell
-            ImageIcon icon = (ImageIcon) square[currentRow][currentCol].getIcon();
+            revealCurrentCell(currentRow, currentCol);
 
-            // Skip flagged or question-marked cells to retain their icons
-            if (icon == flagIcon || icon == question_markIcon) {
-                continue;
+            if (adjacentMineCount[currentRow][currentCol] == 0) {
+                addNeighborsToQueue(queue, currentRow, currentCol);
             }
+        }
+    }
 
-            // Disable the cell to mark it as revealed
-            square[currentRow][currentCol].setEnabled(false);
+    private boolean isCellRevealedOrMarked(int row, int col) {
+        if (!square[row][col].isEnabled()) {
+            return true;
+        }
+        ImageIcon icon = (ImageIcon) square[row][col].getIcon();
+        return icon == flagIcon || icon == question_markIcon;
+    }
 
-            int count = adjacentMineCount[currentRow][currentCol];
+    private void revealCurrentCell(int row, int col) {
+        square[row][col].setEnabled(false);
+        int count = adjacentMineCount[row][col];
+        if (count > 0) {
+            square[row][col].setText(String.valueOf(count));
+        } else {
+            square[row][col].setBackground(Color.LIGHT_GRAY);
+            square[row][col].setIcon(null);
+        }
+    }
 
-            if (count > 0) {
-                // Only set the text if there are adjacent mines
-                square[currentRow][currentCol].setText(String.valueOf(count));
-            } else {
-                // Set background to light gray for empty cells only
-                square[currentRow][currentCol].setBackground(Color.LIGHT_GRAY);
-                square[currentRow][currentCol].setIcon(null); // Remove icon for empty cells only
-
-                // Add neighboring cells to the queue if they are within bounds
-                for (int i = -1; i <= 1; i++) {
-                    for (int j = -1; j <= 1; j++) {
-                        int newRow = currentRow + i;
-                        int newCol = currentCol + j;
-
-                        // Check bounds and add only enabled, non-flagged cells to the queue
-                        if (newRow >= 0 && newRow < 16 && newCol >= 0 && newCol < 16) {
-                            if (square[newRow][newCol].isEnabled()) {
-                                // Get the icon of the neighboring cell
-                                ImageIcon neighborIcon = (ImageIcon) square[newRow][newCol].getIcon();
-
-                                // Skip adding flagged or question-marked neighbors to the queue
-                                if (neighborIcon != flagIcon && neighborIcon != question_markIcon) {
-                                    queue.add(new int[] { newRow, newCol });
-                                }
-                            }
-                        }
-                    }
+    private void addNeighborsToQueue(IntArrayQueue<int[]> queue, int row, int col) {
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                int newRow = row + i;
+                int newCol = col + j;
+                if (isValidCell(newRow, newCol) && !isCellRevealedOrMarked(newRow, newCol)) {
+                    queue.add(new int[] { newRow, newCol });
                 }
             }
         }
     }
 
+    private boolean isValidCell(int row, int col) {
+        return row >= 0 && row < 16 && col >= 0 && col < 16;
+    }
+
+
     private void calculateAdjacentMineCounts() {
-        // Calculate the number of adjacent mines for each cell
         for (int row = 0; row < 16; row++) {
             for (int col = 0; col < 16; col++) {
                 if (!mines.containMines(row, col)) {
@@ -397,7 +385,6 @@ public class MainFrame extends JFrame implements MouseListener {
     }
 
     private boolean checkWin() {
-        // Check if the player has won by revealing all non-mine cells
         for (int row = 0; row < 16; row++) {
             for (int col = 0; col < 16; col++) {
                 if (!mines.containMines(row, col) && square[row][col].isEnabled()) {
@@ -409,7 +396,6 @@ public class MainFrame extends JFrame implements MouseListener {
     }
 
     private void placeMines() {
-        // Randomly place mines on the grid
         Random rand = new Random();
         int minesPlaced = 0;
         while (minesPlaced < NUM_MINES) {
@@ -423,66 +409,71 @@ public class MainFrame extends JFrame implements MouseListener {
         }
     }
 
-    // GUI lang to for icons: question mark and flag
     public void createTimerAndMenu() {
+        setupUpperPanelLayout();
+        configurePlayerLabel();
+        createIcons();
+        addComponentsToUpperPanel();
+    }
+
+    private void setupUpperPanelLayout() {
         upperPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+    }
 
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.anchor = GridBagConstraints.CENTER;
-
-        if (name != null && !name.isEmpty()) {
-            label2.setText("Player: " + name);
-        } else {
-            label2.setText("Player: Guest");
-        }
-
+    private void configurePlayerLabel() {
+        String playerName = (name != null && !name.isEmpty()) ? name : "Guest";
+        label2.setText("Player: " + playerName);
         label2.setForeground(new Color(0x5a8d03));
         label2.setBackground(Color.BLACK);
         label2.setOpaque(true);
         label2.setFont(new Font("Serif", Font.BOLD, 15));
+    }
 
-        // happy icon
-        happyIcon = new ImageIcon("C:\\Users\\Geralyn\\Desktop\\MineSweeper\\src\\resources\\happy.png");
-        imagelbl = new JLabel(happyIcon);
-        imagelbl.addMouseListener(this);
-        flagIcon = new ImageIcon("C:\\Users\\Geralyn\\Desktop\\MineSweeper\\src\\resources\\flag.jpg");
-        imagelbl1 = new JLabel(flagIcon);
-        imagelbl1.addMouseListener(this);
-        EmptyBorder padding = new EmptyBorder(10, 10, 10, 10); // Adjust as needed
-        backgroundSpaceFlag = new MatteBorder(5, 5, 5, 5, Color.BLUE); // Adjust as needed
-        imagelbl1.setBorder(new CompoundBorder(backgroundSpaceFlag, padding));
+    private void createIcons() {
+        EmptyBorder padding = new EmptyBorder(10, 10, 10, 10);
+        MatteBorder blueBorder = new MatteBorder(5, 5, 5, 5, Color.BLUE);
+        CompoundBorder compoundBorder = new CompoundBorder(blueBorder, padding);
 
-        // question mark icon
-        question_markIcon = new ImageIcon("C:\\Users\\Geralyn\\Desktop\\MineSweeper\\src\\resources\\question_mark.jfif");
-        imagelbl2 = new JLabel(question_markIcon);
-        imagelbl2.setPreferredSize(new Dimension(60, 60)); // Add some extra space for background visibility
-        imagelbl2.setHorizontalAlignment(SwingConstants.CENTER); // Center the icon within the label
+        flagIcon = loadIcon("/resources/flag.jpg");
+        imagelbl1 = createIconLabel(flagIcon, compoundBorder);
+
+        happyIcon = loadIcon("/resources/happy.png");
+        imagelbl = createIconLabel(happyIcon, null);
+
+        question_markIcon = loadIcon("/resources/question_mark.jfif");
+        imagelbl2 = createIconLabel(question_markIcon, compoundBorder);
+        imagelbl2.setPreferredSize(new Dimension(60, 60));
+        imagelbl2.setHorizontalAlignment(SwingConstants.CENTER);
         imagelbl2.setVerticalAlignment(SwingConstants.CENTER);
-        imagelbl2.addMouseListener(this);
-        backgroundSpaceQuestionMark = new MatteBorder(5, 5, 5, 5, Color.BLUE); // Adjust as needed
-        imagelbl2.setBorder(new CompoundBorder(backgroundSpaceQuestionMark, padding));
+    }
 
-        // Adding components
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        upperPanel.add(imagelbl1, gbc);
+    private void addComponentsToUpperPanel() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.CENTER;
 
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        upperPanel.add(label1, gbc);
+        addToUpperPanel(imagelbl1, gbc, 0);
+        addToUpperPanel(label1, gbc, 1);
+        addToUpperPanel(imagelbl, gbc, 2);
+        addToUpperPanel(label2, gbc, 3);
+        addToUpperPanel(imagelbl2, gbc, 4);
+    }
 
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        upperPanel.add(imagelbl, gbc);
+    private ImageIcon loadIcon(String path) {
+        return new ImageIcon(getClass().getResource(path));
+    }
 
-        gbc.gridx = 3;
-        gbc.gridy = 0;
-        upperPanel.add(label2, gbc);
+    private JLabel createIconLabel(ImageIcon icon, Border border) {
+        JLabel label = new JLabel(icon);
+        if (border != null) label.setBorder(border);
+        label.addMouseListener(this);
+        return label;
+    }
 
-        gbc.gridx = 4;
+    private void addToUpperPanel(Component component, GridBagConstraints gbc, int x) {
+        gbc.gridx = x;
         gbc.gridy = 0;
-        upperPanel.add(imagelbl2, gbc);
+        upperPanel.add(component, gbc);
     }
 
     TimerTask task = new TimerTask() {
@@ -504,17 +495,11 @@ public class MainFrame extends JFrame implements MouseListener {
     };
 
     public void restartTheGame() {
-        // this is to reset everything to way back from the start
-        stop = true;
-        gameOver = false;
-        question_mark = false;
-        flag = false;
+        stop = true; gameOver = false; question_mark = false; flag = false;
         label1.setText("Timer: 00:00");
         mines = new MineList();
         adjacentMineCount = new int[16][16];
 
-        // Re-enable the button, Remove any icons, Clear any text, Reset background
-        // color
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
                 square[i][j].setEnabled(true);
@@ -524,22 +509,19 @@ public class MainFrame extends JFrame implements MouseListener {
             }
         }
 
-        // Place mines and calculate adjacent mine counts again
         placeMines();
         calculateAdjacentMineCounts();
         time = 0;
 
-        // Restart the timer
         stop = false;
         try {
-            date.scheduleAtFixedRate(task, 0, 1000); // timer updates every second
+            date.scheduleAtFixedRate(task, 0, 1000);
         } catch (Exception ee) {
             System.out.println("Timer error.");
         }
 
-        // Reset the game display, Show the game panel
         cardLayout.show(main, "5");
-        sound.clip.stop();
+        sound.stopSound();
     }
 
     @Override
@@ -578,32 +560,18 @@ public class MainFrame extends JFrame implements MouseListener {
                         break;
                     case "Easy":
                         NUM_MINES = 10;
-                        if (restart) {
-                            restartTheGame();
-                            restart = false;
-                        } else {
-                            startNewGame();
-                        }
-
+                        setUpBoard();
                         break;
+
                     case "Medium":
                         NUM_MINES = 17;
-                        if (restart) {
-                            restartTheGame();
-                            restart = false;
-                        } else {
-                            startNewGame();
-                        }
+                        setUpBoard();
 
                         break;
                     case "Hard":
                         NUM_MINES = 25;
-                        if (restart) {
-                            restartTheGame();
-                            restart = false;
-                        } else {
-                            startNewGame();
-                        }
+                        setUpBoard();
+                        
                         break;
                     case "Restart":
                         ispaused = false;
@@ -611,7 +579,7 @@ public class MainFrame extends JFrame implements MouseListener {
                         break;
                     case "Back to Game":
                         cardLayout.show(main, "5");
-                        sound.clip.stop();
+                        sound.stopSound();;
                         break;
                     default:
                         break;
@@ -645,12 +613,20 @@ public class MainFrame extends JFrame implements MouseListener {
     private void startNewGame() {
         mainInterfaceForGame();
         currentPanel++;
-        sound.clip.stop();
+        sound.stopSound();;
         showPanel(currentPanel);
 
     }
 
-    // for estitik lang to
+    private void setUpBoard(){
+        if (restart) {
+            restartTheGame();
+            restart = false;
+        } else {
+            startNewGame();
+        }
+    }
+
     private void changeQuestionMarkColor() {
         backgroundSpaceQuestionMark = new MatteBorder(5, 5, 5, 5, Color.RED); // Change to red when
         Border innerPadding = ((CompoundBorder) imagelbl2.getBorder()).getInsideBorder();
@@ -659,7 +635,6 @@ public class MainFrame extends JFrame implements MouseListener {
         imagelbl2.repaint();
     }
 
-    // for estitik lang to
     private void changeflagColor() {
         backgroundSpaceFlag = new MatteBorder(5, 5, 5, 5, Color.RED); // Change to red when
         Border innerPadding = ((CompoundBorder) imagelbl1.getBorder()).getInsideBorder();
