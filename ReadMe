@@ -92,6 +92,7 @@ bash
 Copy
 Edit
 java -jar Mine-Sweeper.jar
+
 Option B: Double-click (GUI)
 Double-click the Mine-Sweeper.jar file (Java Runtime Environment must be installed).
 
