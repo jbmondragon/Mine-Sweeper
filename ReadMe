@@ -5,11 +5,3 @@
 
 The objective is to clear the entire board without *detonating* any mines. Clues are provided by numbers indicating how many neighboring tiles contain mines.
 
----
-
-### Git Remote Setup
-
-To link your local repository to GitHub, use the following command:
-
-```bash
-git remote add origin https://github.com/mondragonjake/Mine-Sweeper.git
