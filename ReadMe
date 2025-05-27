@@ -1,7 +1,55 @@
-# Mine Sweeper Game
-## Developed by Jake Benusa Mondragon
+#  Mine Sweeper Game
 
-**Mine Sweeper** is a classic logic puzzle game. It features a grid of clickable tiles, with hidden *mines* randomly placed throughout the board.
+_Developed by Jake Benusa Mondragon_
 
-The objective is to clear the entire board without *detonating* any mines. Clues are provided by numbers indicating how many neighboring tiles contain mines.
+![Game Screenshot](/src/resources/MineSweeper-SS.png)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+---
+
+## Table of Contents
+
+- [About](#about)
+- [Features](#features)
+- [How to Play](#how-to-play)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## About
+
+**Mine Sweeper** is a classic logic puzzle game. It features a grid of clickable tiles, with hidden _mines_ randomly placed throughout the board.
+
+The objective is to clear the entire board without _detonating_ any mines. Clues are provided by numbers indicating how many neighboring tiles contain mines.
+
+---
+
+## Features
+
+- Customizable grid sizes
+- Multiple difficulty levels
+- Intuitive UI
+- High scores tracking
+
+---
+
+## How to Play
+
+1. Click tiles to reveal them.
+2. Numbers indicate how many mines are adjacent.
+3. Right-click to flag suspected mines.
+4. Clear the board without detonating a mine to win!
+
+---
+
+## Installation
+
+```sh
+git clone https://github.com/mondragonjake/Mine-Sweeper.git
+cd Mine-Sweeper
+# Instructions for building/running the Java app
+```
