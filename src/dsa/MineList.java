@@ -3,7 +3,7 @@ import javax.swing.ImageIcon;
 public class MineList {
 
     Mine head;
-    ImageIcon bombIcon = new ImageIcon("C:\\Users\\Geralyn\\Desktop\\MineSweeper\\src\\resources\\Bomb.jfif");
+    ImageIcon bombIcon = new ImageIcon(getClass().getResource("/resources/Bomb.jfif"));
 
     public MineList() {
 
