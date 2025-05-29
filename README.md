@@ -53,43 +53,41 @@ The challenge lies in using the numbered clues to logically determine which tile
 ```bash
 git clone https://github.com/mondragonjake/Mine-Sweeper.git
 cd Mine-Sweeper
+```
 
-2️⃣ Open the Project in VS Code
+### 2️⃣ Open the Project in VS Code
+
 Make sure you have the Java Extension Pack installed.
 
-Navigate to the src folder.
+Navigate to the `src/` folder and open `Main.java`.
 
-Open Main.java.
+### 3️⃣ Run the Application
 
-3️⃣ Run the Application
 You can run the game by:
 
-Clicking the Run Java button in the top-right of VS Code, or
+- Clicking the Run Java button in the top-right of VS Code, or
+- Pressing F6 (VS Code keybind for Run Java)
 
-Pressing F6 (VS Code keybind for Run Java)
+### 4️⃣ Build a JAR File (Optional)
 
-4️⃣ Build a JAR File (Optional)
-Press Ctrl + Shift + P → open the Command Palette.
+- Press Ctrl + Shift + P → open the Command Palette.
+- Search: Java: Export Jar.
+- Choose `Main` as the main class.
+- Select all required files.
+- A `Mine-Sweeper.jar` will be generated.
 
-Search: Java: Export Jar.
+### 5️⃣ Run the JAR File
 
-Choose Main as the main class.
+#### Option A: Terminal
 
-Select all required files.
-
-A Mine-Sweeper.jar will be generated.
-
-5️⃣ Run the JAR File
-Option A: Terminal
-
-bash
-Copy
-Edit
+```bash
 java -jar Mine-Sweeper.jar
-Option B: GUI
+```
 
-Double-click the .jar file (Java Runtime Environment required).
+#### Option B: GUI
 
-⚠️ Important: Ensure Java 21 or later is installed, or the application will not run properly.
+Double-click the `.jar` file (Java Runtime Environment required).
 
-🎉 Happy Sweeping! ```
+> ⚠️ Ensure Java 21 or later is installed, or the application will not run properly.
+
+🎉 Happy Sweeping!
