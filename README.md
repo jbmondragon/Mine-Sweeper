@@ -92,4 +92,4 @@ Double-click the .jar file (Java Runtime Environment required).
 
 ⚠️ Important: Ensure Java 21 or later is installed, or the application will not run properly.
 
-<p align="center"> 🎉 Happy Sweeping! </p> ```
+🎉 Happy Sweeping! ```
